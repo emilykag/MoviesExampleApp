@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:orientation="vertical"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="wrap_content"
+                                                   android:background="?attr/selectableItemBackground">
+
+    <ImageView
+            android:layout_width="@dimen/thumbnail_width"
+            android:layout_height="@dimen/thumbnail_height"
+            android:id="@+id/imageViewSearchItemThumb"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
+            tools:srcCompat="@drawable/sample_image"/>
+
+    <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewSearchItemTitle"
+            tools:text="Fight Club"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageViewSearchItemThumb"
+            android:layout_marginStart="16dp"
+            android:textSize="20sp"
+            android:textColor="@android:color/black" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="16dp"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewSearchItemDate"
+            tools:text="1999"
+            app:layout_constraintStart_toEndOf="@+id/imageViewSearchItemThumb"
+            android:layout_marginStart="16dp"
+            android:textSize="18sp"
+            app:layout_constraintTop_toBottomOf="@+id/textViewSearchItemTitle" android:layout_marginTop="3dp"/>
+    <View
+            android:id="@+id/divider"
+            android:layout_width="2dp"
+            android:layout_height="0dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintTop_toTopOf="@id/textViewSearchItemDate"
+            app:layout_constraintBottom_toBottomOf="@id/textViewSearchItemDate"
+            app:layout_constraintStart_toEndOf="@id/textViewSearchItemDate" android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp" android:layout_marginBottom="4dp"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewSearchItemType"
+            tools:text="TV Series"
+            app:layout_constraintStart_toEndOf="@+id/divider"
+            android:layout_marginStart="8dp"
+            android:textSize="18sp"
+            app:layout_constraintTop_toBottomOf="@+id/textViewSearchItemTitle" android:layout_marginTop="3dp"/>
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp" app:srcCompat="@drawable/ic_rating_icon"
+            android:id="@+id/imageView" app:layout_constraintStart_toEndOf="@+id/imageViewSearchItemThumb"
+            android:layout_marginStart="16dp" app:layout_constraintTop_toTopOf="@+id/textViewSearchItemRating"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewSearchItemRating" android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewSearchItemRating"
+            android:textColor="#444444"
+            app:layout_constraintStart_toEndOf="@+id/imageView" android:layout_marginStart="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/textViewSearchItemDate" tools:text="8.4" android:textSize="16sp"
+            android:layout_marginTop="10dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
