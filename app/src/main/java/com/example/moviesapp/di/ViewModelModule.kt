@@ -3,6 +3,7 @@ package com.example.moviesapp.di
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.moviesapp.ui.details.DetailsViewModel
+import com.example.moviesapp.ui.favorites.FavoritesListViewModel
 import com.example.moviesapp.ui.search.SearchViewModel
 import com.example.moviesapp.viewmodel.ViewModelFactory
 
@@ -22,6 +23,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(DetailsViewModel::class)
     abstract fun bindDetailsViewModel(detailsViewModel: DetailsViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(FavoritesListViewModel::class)
+    abstract fun bindFavoritesListViewModel(favoritesListViewModel: FavoritesListViewModel): ViewModel
 
     @Binds
     abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory

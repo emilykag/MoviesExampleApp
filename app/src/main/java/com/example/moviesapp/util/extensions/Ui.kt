@@ -10,9 +10,14 @@ import androidx.fragment.app.Fragment
 fun AppCompatActivity.addFragment(
     tag: String,
     container: Int,
+    ignoreBackStack: Boolean = false,
     newInstance: () -> Fragment
 ) {
-    val fragment = supportFragmentManager.findFragmentByTag(tag) ?: newInstance()
+    val fragment = if (ignoreBackStack) {
+        newInstance()
+    } else {
+        supportFragmentManager.findFragmentByTag(tag) ?: newInstance()
+    }
     supportFragmentManager
         .beginTransaction()
         .replace(container, fragment, tag)
@@ -22,9 +27,14 @@ fun AppCompatActivity.addFragment(
 fun AppCompatActivity.addFragmentBackStack(
     tag: String,
     container: Int,
+    ignoreBackStack: Boolean = false,
     newInstance: () -> Fragment
 ) {
-    val fragment = supportFragmentManager.findFragmentByTag(tag) ?: newInstance()
+    val fragment = if (ignoreBackStack) {
+        newInstance()
+    } else {
+        supportFragmentManager.findFragmentByTag(tag) ?: newInstance()
+    }
     supportFragmentManager
         .beginTransaction()
         .add(container, fragment, tag)

@@ -51,7 +51,7 @@ class SearchResultsAdapter(
 
         init {
             view.setOnClickListener {
-                listener.onClick(getItem(layoutPosition))
+                listener.onClickSearchResult(getItem(layoutPosition))
             }
         }
     }
@@ -70,5 +70,5 @@ class SearchResultsAdapter(
 }
 
 interface OnSearchResultClickListener {
-    fun onClick(searchResult: SearchResult?)
+    fun onClickSearchResult(searchResult: SearchResult?)
 }

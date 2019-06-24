@@ -3,6 +3,7 @@ package com.example.moviesapp.repository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import androidx.paging.Config
 import androidx.paging.PagedList
 import androidx.paging.toLiveData
 import com.example.moviesapp.api.*
@@ -11,6 +12,7 @@ import com.example.moviesapp.db.entities.Movie
 import com.example.moviesapp.db.entities.TvShow
 import com.example.moviesapp.util.AppExecutors
 import com.example.moviesapp.util.Constants
+import com.example.moviesapp.util.Constants.Companion.DEFAULT_PAGE_SIZE
 import com.example.moviesapp.util.NetworkBoundResource
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -26,7 +28,7 @@ class MovieRepository @Inject constructor(
     fun searchMovies(query: String): LiveData<Status> {
         val sourceFactory = MoviePageDataSourceFactory(movieService, query)
 
-        val livePagedList = sourceFactory.toLiveData(20, null)
+        val livePagedList = sourceFactory.toLiveData(DEFAULT_PAGE_SIZE, null)
         val refreshState = Transformations.switchMap(sourceFactory.liveDataSource) {
             it.status
         }

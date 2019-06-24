@@ -9,6 +9,9 @@ class Constants {
 
         const val IMAGE_URL = "https://image.tmdb.org/t/p/"
         const val THUMB_SIZE = "w92"
+        const val FAV_IMAGE_SIZE = "w154"
         const val MAIN_IMAGE_SIZE = "w300"
+
+        const val DEFAULT_PAGE_SIZE = 20
     }
 }

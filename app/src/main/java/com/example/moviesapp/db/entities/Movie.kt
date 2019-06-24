@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.TypeConverters
 import com.example.moviesapp.db.typeconverters.GenreTypeConverter
 import com.example.moviesapp.util.Constants
+import com.example.moviesapp.util.DateUtils
 import com.google.gson.annotations.SerializedName
 
 @Entity(primaryKeys = ["id"])
@@ -35,5 +36,9 @@ data class Movie(
         } else {
             String.format("%.1f", rating)
         }
+    }
+
+    fun getYear(): String {
+        return DateUtils.getYearFromDate(date)
     }
 }

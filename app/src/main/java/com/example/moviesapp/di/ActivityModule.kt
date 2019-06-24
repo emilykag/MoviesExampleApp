@@ -1,6 +1,7 @@
 package com.example.moviesapp.di
 
-import com.example.moviesapp.MainActivity
+import com.example.moviesapp.ui.favorites.FavoritesActivity
+import com.example.moviesapp.ui.search.SearchActivity
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -9,5 +10,8 @@ import dagger.android.ContributesAndroidInjector
 abstract class ActivityModule {
 
     @ContributesAndroidInjector(modules = [FragmentModule::class])
-    abstract fun contributeMainActivity(): MainActivity
+    abstract fun contributeSearchActivity(): SearchActivity
+
+    @ContributesAndroidInjector(modules = [FragmentModule::class])
+    abstract fun contributeFavoritesActivity(): FavoritesActivity
 }

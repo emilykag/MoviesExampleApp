@@ -1,18 +1,26 @@
 <resources>
     <string name="app_name">MoviesApp</string>
 
+    <!--search screen-->
     <string name="search_movie">Search movie here</string>
+    <string name="select_movie_on_the_left">Select an item from the list to view details about it.</string>
+    <string name="operation_not_supported_for_media_type">This operation is not supported for this media type: %1$s
+    </string>
 
     <string name="tv_series">TV Series</string>
     <string name="movie">Movie</string>
     <string name="person">Person</string>
 
+    <!--details screen-->
     <string name="watch_trailer">Watch Trailer</string>
     <string name="genre">Genre</string>
     <string name="release_date">Release Date</string>
     <string name="status">Status</string>
     <string name="tv_show_till_date">%1$s (till %2$s)</string>
+    <string name="added_to_favorites">Added to favorites</string>
+    <string name="removed_from_favorites">Removed from favorites</string>
 
-    <string name="operation_not_supported_for_media_type">This operation is not supported for this media type: %1$s</string>
+    <!--favorites screen-->
+    <string name="no_favorites">No favorites</string>
 
 </resources>

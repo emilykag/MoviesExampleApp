@@ -6,6 +6,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 object GenreTypeConverter {
+
     @TypeConverter
     @JvmStatic
     fun stringToGenreList(str: String?): List<Genre>? {

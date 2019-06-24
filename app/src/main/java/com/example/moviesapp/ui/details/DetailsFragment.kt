@@ -5,35 +5,42 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 
 import com.example.moviesapp.R
-import com.example.moviesapp.api.SearchResult
 import com.example.moviesapp.api.Status
 import com.example.moviesapp.db.entities.Genre
+import com.example.moviesapp.db.entities.ShowType
 import com.example.moviesapp.di.Injectable
 import com.example.moviesapp.util.extensions.showToast
 import kotlinx.android.synthetic.main.fragment_details.*
 import javax.inject.Inject
 
-private const val MOVIE_ARG = "MOVIE"
+private const val SHOW_ID_ARG = "SHOW_ID"
+private const val SHOW_TYPE_ARG = "SHOW_TYPE"
 
 class DetailsFragment : Fragment(), Injectable {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    lateinit var detailsViewModel: DetailsViewModel
+    lateinit var viewModel: DetailsViewModel
 
-    private var item: SearchResult? = null
+    private var showId: Int? = null
+    private var showType: ShowType? = null
+
+    private var isFavorite = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            item = it.getParcelable(MOVIE_ARG)
+            showId = it.getInt(SHOW_ID_ARG)
+            showType = it.getSerializable(SHOW_TYPE_ARG) as ShowType?
         }
     }
 
@@ -45,35 +52,40 @@ class DetailsFragment : Fragment(), Injectable {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        detailsViewModel = ViewModelProviders.of(this, viewModelFactory)
+        viewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(DetailsViewModel::class.java)
 
+        setUpToolbar()
         getMovieOrTvShow()
     }
 
     private fun getMovieOrTvShow() {
-        item?.let { item ->
-            if (item.type == SearchResult.Type.MOVIE) {
-                getMovie(item)
-            } else if (item.type == SearchResult.Type.TV) {
-                getTvShow(item)
+        showId?.let { id ->
+            showType?.let { type ->
+                if (type == ShowType.MOVIE) {
+                    getMovie(id)
+                } else if (type == ShowType.TV) {
+                    getTvShow(id)
+                }
             }
         }
     }
 
-    private fun getMovie(item: SearchResult) {
-        detailsViewModel.getMovie(item.id)
-            .observe(this, Observer {
+    private fun getMovie(id: Int) {
+        viewModel.getMovie(id)
+            .observe(viewLifecycleOwner, Observer {
                 when (it.status) {
                     Status.LOADING -> {
-
+                        updateProgress(true)
                     }
                     Status.SUCCESS -> {
+                        updateProgress(false)
                         it.data?.let { movie ->
                             updateCommonUi(
+                                movie.id,
                                 movie.getImageUrl(),
                                 movie.title,
-                                SearchResult.Type.MOVIE,
+                                ShowType.MOVIE,
                                 movie.video,
                                 movie.getDisplayRating(),
                                 movie.voteCount,
@@ -82,28 +94,38 @@ class DetailsFragment : Fragment(), Injectable {
                                 movie.date,
                                 movie.status
                             )
+                            setupFavorites(
+                                movie.id,
+                                movie.getImageUrl(),
+                                ShowType.MOVIE,
+                                movie.title,
+                                movie.getYear()
+                            )
                         }
                     }
                     Status.ERROR -> {
+                        updateProgress(false)
                         showToast(it.message)
                     }
                 }
             })
     }
 
-    private fun getTvShow(item: SearchResult) {
-        detailsViewModel.getTvShow(item.id)
-            .observe(this, Observer {
+    private fun getTvShow(id: Int) {
+        viewModel.getTvShow(id)
+            .observe(viewLifecycleOwner, Observer {
                 when (it.status) {
                     Status.LOADING -> {
-
+                        updateProgress(true)
                     }
                     Status.SUCCESS -> {
+                        updateProgress(false)
                         it.data?.let { tv ->
                             updateCommonUi(
+                                tv.id,
                                 tv.getImageUrl(),
                                 tv.name,
-                                SearchResult.Type.TV,
+                                ShowType.TV,
                                 false,
                                 tv.getDisplayRating(),
                                 tv.voteCount,
@@ -112,9 +134,17 @@ class DetailsFragment : Fragment(), Injectable {
                                 tv.getDateDisplay(context),
                                 tv.status
                             )
+                            setupFavorites(
+                                tv.id,
+                                tv.getImageUrl(),
+                                ShowType.TV,
+                                tv.name,
+                                tv.getYear()
+                            )
                         }
                     }
                     Status.ERROR -> {
+                        updateProgress(false)
                         showToast(it.message)
                     }
                 }
@@ -122,9 +152,10 @@ class DetailsFragment : Fragment(), Injectable {
     }
 
     private fun updateCommonUi(
+        id: Int,
         imageUrl: String?,
         title: String?,
-        type: SearchResult.Type,
+        type: ShowType,
         video: Boolean?,
         rating: String?,
         voteCount: Int?,
@@ -154,11 +185,57 @@ class DetailsFragment : Fragment(), Injectable {
         }
     }
 
+    private fun setupFavorites(
+        id: Int,
+        image: String?,
+        type: ShowType,
+        title: String?,
+        releaseDate: String?
+    ) {
+        viewModel.isFavorite(id, type).observe(viewLifecycleOwner, Observer {
+            if (it == 1) {
+                isFavorite = true
+                fabFavorites.setImageResource(R.drawable.ic_favorite_white_24dp)
+            } else {
+                fabFavorites.setImageResource(R.drawable.ic_favorite_border_white_24dp)
+            }
+        })
+        fabFavorites.setOnClickListener {
+            if (isFavorite) {
+                viewModel.removeFromFavorites(id, type)
+                    .observe(viewLifecycleOwner, Observer { removed ->
+                        if (removed) {
+                            showToast(getString(R.string.removed_from_favorites))
+                        }
+                    })
+            } else {
+                viewModel.addToFavorites(id, image, type, title, releaseDate)
+                    .observe(viewLifecycleOwner, Observer { added ->
+                        if (added) {
+                            showToast(getString(R.string.added_to_favorites))
+                        }
+                    })
+            }
+        }
+    }
+
+    private fun updateProgress(showProgress: Boolean) {
+        progressBarFetchDetails.isVisible = showProgress
+        detailsLayout.isVisible = !showProgress
+        fabFavorites.isVisible = !showProgress
+    }
+
+    private fun setUpToolbar() {
+        toolbarDetails.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+        toolbarDetails.setNavigationOnClickListener { activity?.onBackPressed() }
+    }
+
     companion object {
 
-        fun newInstance(item: SearchResult): DetailsFragment = DetailsFragment().apply {
-            arguments = Bundle(1).apply {
-                putParcelable(MOVIE_ARG, item)
+        fun newInstance(showId: Int, type: ShowType): DetailsFragment = DetailsFragment().apply {
+            arguments = Bundle(2).apply {
+                putInt(SHOW_ID_ARG, showId)
+                putSerializable(SHOW_TYPE_ARG, type)
             }
         }
     }

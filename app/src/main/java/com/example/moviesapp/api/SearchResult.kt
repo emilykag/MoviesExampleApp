@@ -1,8 +1,9 @@
 package com.example.moviesapp.api
 
 import android.os.Parcelable
-import com.example.moviesapp.R
+import com.example.moviesapp.db.entities.ShowType
 import com.example.moviesapp.util.Constants
+import com.example.moviesapp.util.DateUtils
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 import timber.log.Timber
@@ -17,7 +18,7 @@ data class SearchResult(
     @SerializedName("poster_path")
     val image: String?,
     @SerializedName("media_type")
-    val type: Type,
+    val type: ShowType,
     @SerializedName(value = "title", alternate = ["name"])
     val title: String,
     @SerializedName(value = "release_date", alternate = ["first_air_date"])
@@ -31,19 +32,7 @@ data class SearchResult(
     }
 
     fun getYear(): String {
-        return if (date.isNullOrEmpty()) {
-            "-"
-        } else {
-            try {
-                val apiDateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-                val apiDate = apiDateFormatter.parse(date)
-                val yearFormatter = SimpleDateFormat("yyyy", Locale.getDefault())
-                yearFormatter.format(apiDate)
-            } catch (ex: ParseException) {
-                Timber.d(ex, "Cannot parse $date")
-                "-"
-            }
-        }
+        return DateUtils.getYearFromDate(date)
     }
 
     fun getDisplayRating(): String {
@@ -52,15 +41,5 @@ data class SearchResult(
         } else {
             String.format("%.1f", rating)
         }
-    }
-
-    enum class Type(val res: Int) {
-
-        @SerializedName("movie")
-        MOVIE(R.string.movie),
-        @SerializedName("tv")
-        TV(R.string.tv_series),
-        @SerializedName("person")
-        PERSON(R.string.person)
     }
 }

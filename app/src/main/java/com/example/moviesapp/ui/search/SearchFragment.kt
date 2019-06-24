@@ -17,20 +17,22 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import com.example.moviesapp.R
 import com.example.moviesapp.api.SearchResult
 import com.example.moviesapp.api.Status
+import com.example.moviesapp.db.entities.ShowType
 import com.example.moviesapp.di.Injectable
 import com.example.moviesapp.ui.details.DetailsFragment
-import com.example.moviesapp.util.extensions.addFragmentBackStack
-import com.example.moviesapp.util.extensions.hideKeyboard
-import com.example.moviesapp.util.extensions.showToast
+import com.example.moviesapp.ui.favorites.FavoritesActivity
+import com.example.moviesapp.util.extensions.*
 import kotlinx.android.synthetic.main.fragment_search.*
 import javax.inject.Inject
 
-class SearchFragment : Fragment(), Injectable {
+class SearchFragment : Fragment(), Injectable, OnSearchResultClickListener {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     lateinit var searchViewModel: SearchViewModel
+
+    private var twoPane: Boolean = false
 
     private var adapter: SearchResultsAdapter? = null
 
@@ -45,6 +47,10 @@ class SearchFragment : Fragment(), Injectable {
         searchViewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(SearchViewModel::class.java)
 
+        if (detailsContainer != null) {
+            twoPane = true
+        }
+
         editTextSearchMovie.setOnEditorActionListener { _: View, actionId: Int, _: KeyEvent? ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 activity?.hideKeyboard()
@@ -55,56 +61,59 @@ class SearchFragment : Fragment(), Injectable {
             }
         }
 
-        context?.let {
-            if (isAdded) {
-                adapter = SearchResultsAdapter(
-                    it,
-                    object : OnSearchResultClickListener {
-                        override fun onClick(searchResult: SearchResult?) {
-                            searchResult?.let { item ->
-
-                                if (item.type == SearchResult.Type.MOVIE ||
-                                    item.type == SearchResult.Type.TV
-                                ) {
-                                    activity?.let { fragAct ->
-                                        (fragAct as AppCompatActivity)
-                                            .addFragmentBackStack(
-                                                DetailsFragment::class.java.name,
-                                                R.id.container
-                                            ) {
-                                                DetailsFragment.newInstance(item)
-                                            }
-                                    }
-                                } else {
-                                    showToast(
-                                        getString(
-                                            R.string.operation_not_supported_for_media_type,
-                                            item.type.toString()
-                                        )
-                                    )
-                                }
-                            }
-
-                        }
-                    })
-                recyclerViewSearchResults.addItemDecoration(
-                    DividerItemDecoration(
-                        it,
-                        DividerItemDecoration.VERTICAL
-                    )
+        imageButtonViewWatchlist.setOnClickListener {
+            context?.let { ctx ->
+                startActivity(
+                    FavoritesActivity.intentFor(ctx)
                 )
-                recyclerViewSearchResults.adapter = adapter
             }
         }
+
+        setUpRecyclerView()
 
         // search with the letter a in order to show some results at first launch
         editTextSearchMovie.setText("a")
         doSearch()
     }
 
+    override fun onClickSearchResult(searchResult: SearchResult?) {
+        searchResult?.let { item ->
+
+            if (item.type == ShowType.MOVIE || item.type == ShowType.TV) {
+                activity?.let { fragAct ->
+                    if (twoPane) {
+                        (fragAct as AppCompatActivity)
+                            .addFragment(
+                                DetailsFragment::class.java.name,
+                                R.id.detailsContainer,
+                                true
+                            ) {
+                                DetailsFragment.newInstance(item.id, item.type)
+                            }
+                    } else {
+                        (fragAct as AppCompatActivity)
+                            .addFragmentBackStack(
+                                DetailsFragment::class.java.name,
+                                R.id.searchContainer
+                            ) {
+                                DetailsFragment.newInstance(item.id, item.type)
+                            }
+                    }
+                }
+            } else {
+                showToast(
+                    getString(
+                        R.string.operation_not_supported_for_media_type,
+                        item.type.toString()
+                    )
+                )
+            }
+        }
+    }
+
     private fun doSearch() {
         searchViewModel.search(editTextSearchMovie.text.toString())
-            .observe(this, Observer {
+            .observe(viewLifecycleOwner, Observer {
                 when (it) {
                     Status.LOADING -> {
                         progressBarMore.isVisible = true
@@ -115,9 +124,24 @@ class SearchFragment : Fragment(), Injectable {
                 }
             })
         searchViewModel.getSearchResultLiveData()
-            .observe(this, Observer {
+            .observe(viewLifecycleOwner, Observer {
                 adapter?.submitList(it)
             })
+    }
+
+    private fun setUpRecyclerView() {
+        context?.let {
+            if (isAdded) {
+                adapter = SearchResultsAdapter(it, this)
+                recyclerViewSearchResults.addItemDecoration(
+                    DividerItemDecoration(
+                        it,
+                        DividerItemDecoration.VERTICAL
+                    )
+                )
+                recyclerViewSearchResults.adapter = adapter
+            }
+        }
     }
 
     companion object {
