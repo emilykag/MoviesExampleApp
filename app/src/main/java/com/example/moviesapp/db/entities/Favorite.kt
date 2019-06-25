@@ -22,8 +22,4 @@ data class Favorite(
     fun getFavImageUrl(): String {
         return Constants.IMAGE_URL + Constants.FAV_IMAGE_SIZE + image
     }
-
-    fun getYear(): String {
-        return DateUtils.getYearFromDate(releaseDate)
-    }
 }

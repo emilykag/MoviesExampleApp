@@ -21,8 +21,10 @@ import com.example.moviesapp.util.extensions.showToast
 import kotlinx.android.synthetic.main.fragment_details.*
 import javax.inject.Inject
 
-private const val SHOW_ID_ARG = "SHOW_ID"
-private const val SHOW_TYPE_ARG = "SHOW_TYPE"
+const val SHOW_ID_ARG = "SHOW_ID"
+const val SHOW_TYPE_ARG = "SHOW_TYPE"
+const val SHOW_THUMB_IMG_ARG = "SHOW_THUMB_IMG"
+const val TWO_PANE_ARG = "TWO_PANE"
 
 class DetailsFragment : Fragment(), Injectable {
 
@@ -33,6 +35,8 @@ class DetailsFragment : Fragment(), Injectable {
 
     private var showId: Int? = null
     private var showType: ShowType? = null
+    private var showThumbImg: String? = null
+    private var twoPane: Boolean = false
 
     private var isFavorite = false
 
@@ -41,6 +45,8 @@ class DetailsFragment : Fragment(), Injectable {
         arguments?.let {
             showId = it.getInt(SHOW_ID_ARG)
             showType = it.getSerializable(SHOW_TYPE_ARG) as ShowType?
+            showThumbImg = it.getString(SHOW_THUMB_IMG_ARG)
+            twoPane = it.getBoolean(TWO_PANE_ARG)
         }
     }
 
@@ -62,17 +68,18 @@ class DetailsFragment : Fragment(), Injectable {
     private fun getMovieOrTvShow() {
         showId?.let { id ->
             showType?.let { type ->
+                viewModel.setShowId(id)
                 if (type == ShowType.MOVIE) {
-                    getMovie(id)
+                    getMovie()
                 } else if (type == ShowType.TV) {
-                    getTvShow(id)
+                    getTvShow()
                 }
             }
         }
     }
 
-    private fun getMovie(id: Int) {
-        viewModel.getMovie(id)
+    private fun getMovie() {
+        viewModel.getMovie()
             .observe(viewLifecycleOwner, Observer {
                 when (it.status) {
                     Status.LOADING -> {
@@ -82,7 +89,6 @@ class DetailsFragment : Fragment(), Injectable {
                         updateProgress(false)
                         it.data?.let { movie ->
                             updateCommonUi(
-                                movie.id,
                                 movie.getImageUrl(),
                                 movie.title,
                                 ShowType.MOVIE,
@@ -96,7 +102,7 @@ class DetailsFragment : Fragment(), Injectable {
                             )
                             setupFavorites(
                                 movie.id,
-                                movie.getImageUrl(),
+                                showThumbImg,
                                 ShowType.MOVIE,
                                 movie.title,
                                 movie.getYear()
@@ -111,8 +117,8 @@ class DetailsFragment : Fragment(), Injectable {
             })
     }
 
-    private fun getTvShow(id: Int) {
-        viewModel.getTvShow(id)
+    private fun getTvShow() {
+        viewModel.getTvShow()
             .observe(viewLifecycleOwner, Observer {
                 when (it.status) {
                     Status.LOADING -> {
@@ -122,7 +128,6 @@ class DetailsFragment : Fragment(), Injectable {
                         updateProgress(false)
                         it.data?.let { tv ->
                             updateCommonUi(
-                                tv.id,
                                 tv.getImageUrl(),
                                 tv.name,
                                 ShowType.TV,
@@ -136,7 +141,7 @@ class DetailsFragment : Fragment(), Injectable {
                             )
                             setupFavorites(
                                 tv.id,
-                                tv.getImageUrl(),
+                                showThumbImg,
                                 ShowType.TV,
                                 tv.name,
                                 tv.getYear()
@@ -152,7 +157,6 @@ class DetailsFragment : Fragment(), Injectable {
     }
 
     private fun updateCommonUi(
-        id: Int,
         imageUrl: String?,
         title: String?,
         type: ShowType,
@@ -226,17 +230,28 @@ class DetailsFragment : Fragment(), Injectable {
     }
 
     private fun setUpToolbar() {
-        toolbarDetails.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
-        toolbarDetails.setNavigationOnClickListener { activity?.onBackPressed() }
+        // if two pane do not set back arrow
+        if (!twoPane) {
+            toolbarDetails.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+            toolbarDetails.setNavigationOnClickListener { activity?.onBackPressed() }
+        }
     }
 
     companion object {
 
-        fun newInstance(showId: Int, type: ShowType): DetailsFragment = DetailsFragment().apply {
-            arguments = Bundle(2).apply {
-                putInt(SHOW_ID_ARG, showId)
-                putSerializable(SHOW_TYPE_ARG, type)
+        fun newInstance(
+            showId: Int,
+            type: ShowType,
+            showImg: String?,
+            twoPane: Boolean = false
+        ): DetailsFragment =
+            DetailsFragment().apply {
+                arguments = Bundle(4).apply {
+                    putInt(SHOW_ID_ARG, showId)
+                    putSerializable(SHOW_TYPE_ARG, type)
+                    putString(SHOW_THUMB_IMG_ARG, showImg)
+                    putBoolean(TWO_PANE_ARG, twoPane)
+                }
             }
-        }
     }
 }

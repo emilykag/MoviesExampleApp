@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import com.example.moviesapp.R
 import com.example.moviesapp.util.extensions.addFragment
@@ -19,10 +20,19 @@ class FavoritesActivity : AppCompatActivity(), HasSupportFragmentInjector {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_favorites)
+        setTitle(R.string.favorites)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         addFragment(FavoritesListFragment::class.java.name, R.id.favoritesContainer) {
             FavoritesListFragment.newInstance()
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (item?.itemId == android.R.id.home) {
+            onBackPressed();
+        }
+        return true;
     }
 
     override fun supportFragmentInjector() = dispatchingAndroidInjector

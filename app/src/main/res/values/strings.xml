@@ -21,6 +21,7 @@
     <string name="removed_from_favorites">Removed from favorites</string>
 
     <!--favorites screen-->
+    <string name="favorites">Favorites</string>
     <string name="no_favorites">No favorites</string>
 
 </resources>

@@ -1,6 +1,8 @@
 package com.example.moviesapp.ui.details
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.example.moviesapp.api.Resource
 import com.example.moviesapp.api.SearchResult
@@ -16,12 +18,28 @@ class DetailsViewModel @Inject constructor(
     private val favoritesRepository: FavoritesRepository
 ) : ViewModel() {
 
-    fun getMovie(id: Int): LiveData<Resource<Movie>> {
-        return movieRepository.getMovieById(id)
+    private val _showId = MutableLiveData<Int>()
+
+    private val movie: LiveData<Resource<Movie>> = Transformations.switchMap(_showId) {
+        movieRepository.getMovieById(it)
+    }
+    private val tvShow: LiveData<Resource<TvShow>> = Transformations.switchMap(_showId) {
+        movieRepository.getTvShowById(it)
     }
 
-    fun getTvShow(id: Int): LiveData<Resource<TvShow>> {
-        return movieRepository.getTvShowById(id)
+    fun getMovie(): LiveData<Resource<Movie>> {
+        return movie
+    }
+
+    fun getTvShow(): LiveData<Resource<TvShow>> {
+        return tvShow
+    }
+
+    fun setShowId(id: Int) {
+        if (_showId.value == id) {
+            return
+        }
+        _showId.value = id
     }
 
     fun isFavorite(id: Int, type: ShowType): LiveData<Int> {

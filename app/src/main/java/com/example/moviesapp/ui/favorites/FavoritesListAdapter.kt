@@ -36,7 +36,7 @@ class FavoritesListAdapter(
             .into(holder.imageViewFavorite)
 
         holder.textViewFavoriteTitle.text = item?.title
-        holder.textViewFavoriteYear.text = item?.getYear()
+        holder.textViewFavoriteYear.text = item?.releaseDate
     }
 
     inner class FavoritesVH(view: View) : RecyclerView.ViewHolder(view) {

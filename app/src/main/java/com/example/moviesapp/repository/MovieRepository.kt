@@ -1,10 +1,7 @@
 package com.example.moviesapp.repository
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import androidx.paging.Config
-import androidx.paging.PagedList
 import androidx.paging.toLiveData
 import com.example.moviesapp.api.*
 import com.example.moviesapp.db.dao.MovieDao
@@ -23,9 +20,8 @@ class MovieRepository @Inject constructor(
     private val movieService: MovieService,
     private val movieDao: MovieDao
 ) {
-    var searchResultLiveData: LiveData<PagedList<SearchResult>> = MutableLiveData()
 
-    fun searchMovies(query: String): LiveData<Status> {
+    fun searchMovies(query: String): Listing<SearchResult> {
         val sourceFactory = MoviePageDataSourceFactory(movieService, query)
 
         val livePagedList = sourceFactory.toLiveData(DEFAULT_PAGE_SIZE, null)
@@ -33,9 +29,7 @@ class MovieRepository @Inject constructor(
             it.status
         }
 
-        searchResultLiveData = livePagedList
-
-        return refreshState
+        return Listing(livePagedList, refreshState)
     }
 
     fun getMovieById(id: Int): LiveData<Resource<Movie>> {

@@ -1,5 +1,6 @@
 package com.example.moviesapp.di
 
+import com.example.moviesapp.ui.details.DetailsActivity
 import com.example.moviesapp.ui.favorites.FavoritesActivity
 import com.example.moviesapp.ui.search.SearchActivity
 
@@ -11,6 +12,9 @@ abstract class ActivityModule {
 
     @ContributesAndroidInjector(modules = [FragmentModule::class])
     abstract fun contributeSearchActivity(): SearchActivity
+
+    @ContributesAndroidInjector(modules = [FragmentModule::class])
+    abstract fun contributeDetailsActivity(): DetailsActivity
 
     @ContributesAndroidInjector(modules = [FragmentModule::class])
     abstract fun contributeFavoritesActivity(): FavoritesActivity
