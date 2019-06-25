@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -16,10 +15,13 @@ import com.example.moviesapp.R
 import com.example.moviesapp.api.Status
 import com.example.moviesapp.db.entities.Genre
 import com.example.moviesapp.db.entities.ShowType
+import com.example.moviesapp.db.entities.Video
 import com.example.moviesapp.di.Injectable
 import com.example.moviesapp.util.extensions.showToast
 import kotlinx.android.synthetic.main.fragment_details.*
 import javax.inject.Inject
+import android.content.Intent
+import android.net.Uri
 
 const val SHOW_ID_ARG = "SHOW_ID"
 const val SHOW_TYPE_ARG = "SHOW_TYPE"
@@ -88,7 +90,7 @@ class DetailsFragment : Fragment(), Injectable {
                     Status.SUCCESS -> {
                         updateProgress(false)
                         it.data?.let { movie ->
-                            updateCommonUi(
+                            updateUi(
                                 movie.getImageUrl(),
                                 movie.title,
                                 ShowType.MOVIE,
@@ -127,11 +129,11 @@ class DetailsFragment : Fragment(), Injectable {
                     Status.SUCCESS -> {
                         updateProgress(false)
                         it.data?.let { tv ->
-                            updateCommonUi(
+                            updateUi(
                                 tv.getImageUrl(),
                                 tv.name,
                                 ShowType.TV,
-                                false,
+                                tv.video,
                                 tv.getDisplayRating(),
                                 tv.voteCount,
                                 tv.description,
@@ -156,11 +158,11 @@ class DetailsFragment : Fragment(), Injectable {
             })
     }
 
-    private fun updateCommonUi(
+    private fun updateUi(
         imageUrl: String?,
         title: String?,
         type: ShowType,
-        video: Boolean?,
+        video: Video?,
         rating: String?,
         voteCount: Int?,
         description: String?,
@@ -184,8 +186,9 @@ class DetailsFragment : Fragment(), Injectable {
         textViewDate.text = date
         textViewStatus.text = status
 
-        video?.let {
-            buttonWatchTrailer.isEnabled = it
+        buttonWatchTrailer.isEnabled = !video?.key.isNullOrEmpty()
+        buttonWatchTrailer.setOnClickListener {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(video?.getTrailerUrl())))
         }
     }
 

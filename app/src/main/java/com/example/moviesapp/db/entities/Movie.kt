@@ -2,13 +2,16 @@ package com.example.moviesapp.db.entities
 
 import androidx.room.Entity
 import androidx.room.TypeConverters
+import com.example.moviesapp.api.adapter.VideosJsonAdapter
 import com.example.moviesapp.db.typeconverters.GenreTypeConverter
+import com.example.moviesapp.db.typeconverters.VideoTypeConverter
 import com.example.moviesapp.util.Constants
 import com.example.moviesapp.util.DateUtils
+import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
 
 @Entity(primaryKeys = ["id"])
-@TypeConverters(GenreTypeConverter::class)
+@TypeConverters(GenreTypeConverter::class, VideoTypeConverter::class)
 data class Movie(
     val id: Int,
     @SerializedName("backdrop_path")
@@ -22,9 +25,10 @@ data class Movie(
     @SerializedName("overview")
     val description: String?,
     val status: String?,
-    val video: Boolean?,
     @SerializedName("vote_count")
-    val voteCount: Int?
+    val voteCount: Int?,
+    @SerializedName("videos")
+    val video: Video?
 ) {
     fun getImageUrl(): String {
         return Constants.IMAGE_URL + Constants.MAIN_IMAGE_SIZE + image

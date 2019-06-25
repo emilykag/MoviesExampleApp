@@ -1,6 +1,8 @@
 package com.example.moviesapp.di
 
 import com.example.moviesapp.api.MovieService
+import com.example.moviesapp.api.adapter.VideosJsonAdapter
+import com.example.moviesapp.db.entities.Video
 import com.example.moviesapp.util.Constants
 import com.example.moviesapp.util.LiveDataCallAdapterFactory
 import dagger.Module
@@ -18,6 +20,7 @@ class ApiModule {
     @Singleton
     fun provideGson(): Gson {
         val builder = GsonBuilder()
+        builder.registerTypeAdapter(Video::class.java, VideosJsonAdapter())
         return builder.create()
     }
 

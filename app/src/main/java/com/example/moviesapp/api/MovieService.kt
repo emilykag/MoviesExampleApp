@@ -20,12 +20,14 @@ interface MovieService {
     @GET("3/movie/{id}")
     fun fetchMovieDetails(
         @Path("id") id: Int,
-        @Query("api_key") apiKey: String
+        @Query("api_key") apiKey: String,
+        @Query("append_to_response") append: String
     ): LiveData<ApiResponse<Movie>>
 
     @GET("3/tv/{id}")
     fun fetchTvShowDetails(
         @Path("id") id: Int,
-        @Query("api_key") apiKey: String
+        @Query("api_key") apiKey: String,
+        @Query("append_to_response") append: String
     ): LiveData<ApiResponse<TvShow>>
 }

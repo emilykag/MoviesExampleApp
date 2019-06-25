@@ -42,7 +42,7 @@ class MovieRepository @Inject constructor(
             override fun loadFromDb(): LiveData<Movie> = movieDao.loadMovie(id)
 
             override fun createCall(): LiveData<ApiResponse<Movie>> =
-                movieService.fetchMovieDetails(id, Constants.API_KEY)
+                movieService.fetchMovieDetails(id, Constants.API_KEY, Constants.API_APPEND_VIDEOS_CODE)
 
         }.asLiveData()
     }
@@ -57,7 +57,7 @@ class MovieRepository @Inject constructor(
             override fun loadFromDb(): LiveData<TvShow> = movieDao.loadTvShow(id)
 
             override fun createCall(): LiveData<ApiResponse<TvShow>> =
-                movieService.fetchTvShowDetails(id, Constants.API_KEY)
+                movieService.fetchTvShowDetails(id, Constants.API_KEY, Constants.API_APPEND_VIDEOS_CODE)
 
         }.asLiveData()
     }

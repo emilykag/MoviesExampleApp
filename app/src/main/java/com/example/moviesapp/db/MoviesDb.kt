@@ -14,7 +14,7 @@ import com.example.moviesapp.db.entities.TvShow
         TvShow::class,
         Favorite::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 abstract class MoviesDb : RoomDatabase() {
