@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -23,6 +24,7 @@ import kotlinx.android.synthetic.main.fragment_search.*
 import javax.inject.Inject
 
 private const val SEARCH_QUERY_ARG = "SEARCH_QUERY"
+private const val INITIAL_SEARCH_QUERY = "a"
 
 class SearchFragment : Fragment(), Injectable, OnSearchResultClickListener {
 
@@ -70,9 +72,8 @@ class SearchFragment : Fragment(), Injectable, OnSearchResultClickListener {
 
         setUpRecyclerView()
 
-        // search with the letter a in order to show some results at first launch
-        editTextSearchMovie.setText("a")
-        val searchQuery = savedInstanceState?.getString(SEARCH_QUERY_ARG) ?: editTextSearchMovie.text.toString()
+        // search with the letter a in order to show some results on first launch
+        val searchQuery = savedInstanceState?.getString(SEARCH_QUERY_ARG) ?: INITIAL_SEARCH_QUERY
         doSearch(searchQuery)
     }
 
@@ -124,7 +125,6 @@ class SearchFragment : Fragment(), Injectable, OnSearchResultClickListener {
 
     companion object {
 
-        fun newInstance(): SearchFragment =
-            SearchFragment()
+        fun newInstance(): SearchFragment = SearchFragment()
     }
 }

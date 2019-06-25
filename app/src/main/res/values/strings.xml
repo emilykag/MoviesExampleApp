@@ -23,5 +23,9 @@
     <!--favorites screen-->
     <string name="favorites">Favorites</string>
     <string name="no_favorites">No favorites</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="check_network_msg">Please check your network connection</string>
+    <string name="dismiss">Dismiss</string>
 
 </resources>

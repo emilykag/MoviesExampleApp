@@ -1,92 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                   xmlns:tools="http://schemas.android.com/tools"
-                                                   android:layout_width="match_parent"
-                                                   android:layout_height="match_parent"
-                                                   tools:context=".ui.search.SearchFragment"
-                                                   android:background="@android:color/white"
-                                                   android:focusableInTouchMode="true">
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.search.SearchFragment"
+        android:background="@android:color/white"
+        android:focusableInTouchMode="true">
 
-    <EditText
-            android:layout_width="0dp"
+    <com.google.android.material.appbar.AppBarLayout
             android:layout_height="wrap_content"
-            android:hint="@string/search_movie"
-            android:inputType="textNoSuggestions"
-            android:imeOptions="actionSearch"
-            android:id="@+id/editTextSearchMovie"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:backgroundTint="#bdbdbd"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:drawableEnd="@drawable/ic_search_black_24dp"
-            android:layout_marginEnd="6dp"
-            app:layout_constraintEnd_toStartOf="@+id/imageButtonViewWatchlist"/>
+            android:layout_width="match_parent"
+            android:theme="@style/AppTheme.AppBarOverlay">
 
-    <ImageButton
-            android:src="@drawable/ic_watchlist_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:id="@+id/imageButtonViewWatchlist"
-            android:layout_marginBottom="6dp"
-            app:layout_constraintBottom_toTopOf="@+id/recyclerViewSearchResults"
-            app:layout_constraintTop_toTopOf="parent"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:layout_marginTop="6dp" android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/guideline40"/>
-
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewSearchResults"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextSearchMovie"
-            android:scrollbars="vertical" app:layout_constraintEnd_toStartOf="@+id/guideline40"
-    />
-
-    <ProgressBar
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:indeterminate="true"
-            android:visibility="gone"
-            android:id="@+id/progressBarMore"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            tools:visibility="visible"
-            app:layout_constraintEnd_toStartOf="@+id/guideline40"/>
-
-    <View
-            android:id="@+id/divider2"
-            android:layout_width="2dp"
-            android:layout_height="match_parent"
-            android:background="?android:attr/listDivider"
-            app:layout_constraintStart_toStartOf="@id/guideline40" app:layout_constraintEnd_toEndOf="@id/guideline40"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"/>
-    <androidx.constraintlayout.widget.Guideline
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/guideline40"
-            app:layout_constraintGuide_percent="0.4"
-            android:orientation="vertical"/>
-
-    <FrameLayout
-            android:id="@+id/detailsTabContainer"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guideline40"
-    >
-
-        <TextView
-                android:text="@string/select_movie_on_the_left"
+        <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbarSearch"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/textView" android:layout_gravity="center"
-                style="@style/Base.TextAppearance.AppCompat.Medium" android:gravity="center"/>
-    </FrameLayout>
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:popupTheme="@style/AppTheme.PopupOverlay">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                <EditText
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/search_movie"
+                        android:inputType="textNoSuggestions"
+                        android:imeOptions="actionSearch"
+                        android:id="@+id/editTextSearchMovie"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:backgroundTint="#bdbdbd"
+                        android:layout_marginStart="6dp"
+                        android:drawableEnd="@drawable/ic_search_black_24dp"
+                        android:layout_marginEnd="6dp"
+                        app:layout_constraintEnd_toStartOf="@+id/imageButtonViewWatchlist"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <ImageButton
+                        android:src="@drawable/ic_watchlist_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:id="@+id/imageButtonViewWatchlist"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="4dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:layout_marginTop="4dp"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            android:layout_marginTop="?attr/actionBarSize"
+            tools:context=".ui.search.SearchFragment">
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewSearchResults"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:scrollbars="vertical"
+                app:layout_constraintEnd_toStartOf="@+id/guideline40"/>
+
+        <ProgressBar
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:visibility="gone"
+                android:id="@+id/progressBarMore"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:visibility="visible"
+                app:layout_constraintEnd_toStartOf="@+id/guideline40"/>
+
+        <View android:id="@+id/divider2"
+              android:layout_width="2dp"
+              android:layout_height="match_parent"
+              android:background="?android:attr/listDivider"
+              app:layout_constraintStart_toStartOf="@id/guideline40"
+              app:layout_constraintEnd_toEndOf="@id/guideline40"
+              app:layout_constraintTop_toTopOf="parent"
+              app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <androidx.constraintlayout.widget.Guideline
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/guideline40"
+                app:layout_constraintGuide_percent="0.4"
+                android:orientation="vertical"/>
+
+        <FrameLayout
+                android:id="@+id/detailsTabContainer"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/guideline40">
+
+            <TextView
+                    android:text="@string/select_movie_on_the_left"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView" android:layout_gravity="center"
+                    style="@style/Base.TextAppearance.AppCompat.Medium" android:gravity="center"/>
+        </FrameLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

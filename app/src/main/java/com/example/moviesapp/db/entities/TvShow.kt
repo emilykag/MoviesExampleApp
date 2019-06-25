@@ -39,7 +39,11 @@ data class TvShow(
     }
 
     fun getDateDisplay(context: Context?): String? {
-        return context?.getString(R.string.tv_show_till_date, firstAirDate, lastAirDate)
+        return if (firstAirDate.isNullOrEmpty()) {
+            ""
+        } else {
+            context?.getString(R.string.tv_show_till_date, firstAirDate, lastAirDate).orEmpty()
+        }
     }
 
     fun getDisplayRating(): String {

@@ -1,63 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                   xmlns:tools="http://schemas.android.com/tools"
-                                                   android:layout_width="match_parent"
-                                                   android:layout_height="match_parent"
-                                                   tools:context=".ui.search.SearchFragment"
-                                                   android:background="@android:color/white"
-                                                   android:focusableInTouchMode="true">
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.search.SearchFragment"
+        android:background="@android:color/white"
+        android:focusableInTouchMode="true">
 
-    <EditText
-            android:layout_width="0dp"
+    <com.google.android.material.appbar.AppBarLayout
             android:layout_height="wrap_content"
-            android:hint="@string/search_movie"
-            android:inputType="textNoSuggestions"
-            android:imeOptions="actionSearch"
-            android:id="@+id/editTextSearchMovie"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:backgroundTint="#bdbdbd"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:drawableEnd="@drawable/ic_search_black_24dp"
-            android:layout_marginEnd="6dp"
-            app:layout_constraintEnd_toStartOf="@+id/imageButtonViewWatchlist"/>
-
-    <ImageButton
-            android:src="@drawable/ic_watchlist_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:id="@+id/imageButtonViewWatchlist"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="6dp"
-            app:layout_constraintBottom_toTopOf="@+id/recyclerViewSearchResults"
-            app:layout_constraintTop_toTopOf="parent"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:layout_marginTop="6dp"/>
-
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewSearchResults"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextSearchMovie"
-            android:scrollbars="vertical"/>
-
-    <ProgressBar
-            style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:indeterminate="true"
-            android:visibility="gone"
-            android:id="@+id/progressBarMore"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            tools:visibility="visible"/>
+            android:theme="@style/AppTheme.AppBarOverlay">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbarSearch"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:popupTheme="@style/AppTheme.PopupOverlay">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                <EditText
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/search_movie"
+                        android:inputType="textNoSuggestions"
+                        android:imeOptions="actionSearch"
+                        android:id="@+id/editTextSearchMovie"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:backgroundTint="#bdbdbd"
+                        android:layout_marginStart="6dp"
+                        android:drawableEnd="@drawable/ic_search_black_24dp"
+                        android:layout_marginEnd="6dp"
+                        app:layout_constraintEnd_toStartOf="@+id/imageButtonViewWatchlist"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <ImageButton
+                        android:src="@drawable/ic_watchlist_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:id="@+id/imageButtonViewWatchlist"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="4dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:layout_marginTop="4dp"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="?attr/actionBarSize">
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewSearchResults"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:scrollbars="vertical"/>
+
+        <ProgressBar
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:visibility="gone"
+                android:layout_gravity="bottom"
+                android:id="@+id/progressBarMore"
+                tools:visibility="visible"/>
+
+    </FrameLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

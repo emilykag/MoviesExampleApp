@@ -3,6 +3,7 @@
           xmlns:tools="http://schemas.android.com/tools"
           package="com.example.moviesapp">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
@@ -21,8 +22,9 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.details.DetailsActivity"
-                  android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+                android:name=".ui.details.DetailsActivity"
+                android:theme="@style/AppTheme.NoActionBar"/>
         <activity
                 android:name=".ui.favorites.FavoritesActivity"
                 android:theme="@style/AppTheme"/>
