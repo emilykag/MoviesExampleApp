@@ -204,6 +204,7 @@ class DetailsFragment : Fragment(), Injectable {
                 isFavorite = true
                 fabFavorites.setImageResource(R.drawable.ic_favorite_white_24dp)
             } else {
+                isFavorite = false
                 fabFavorites.setImageResource(R.drawable.ic_favorite_border_white_24dp)
             }
         })
